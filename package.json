@@ -1,0 +1,17 @@
+{
+  "name": "price-formatter",
+  "version": "0.9.0",
+  "description": "Dependency-less price formatting",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "price",
+    "currency",
+    "i18n",
+    "intl"
+  ],
+  "author": "Konrad Zdanowicz",
+  "license": "ISC"
+}
