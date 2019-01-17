@@ -22,7 +22,7 @@ format(1999.99);
 // 1 999.99
 ```
 
-Setting `currency`
+### Setting `currency`
 ```
 format(1999.99, {
     currency: '€'
@@ -30,7 +30,7 @@ format(1999.99, {
 // 1 999.99 €
 ```
 
-Setting other formatting options
+### Setting other formatting options
 ```
 format(1999.99, {
     currency: '$',
@@ -63,8 +63,8 @@ format(number, options?: FormattingOptions)
  * *spacing?*: `boolean` - Spacing between currency and price. By default: `true`
  
 ## Compatibility
-This works in every modern browser as well as on the server. This library does not contain and will never contain any dependency at all.
+This works in every modern browser as well as on the server. This module does not contain and will never contain any dependency at all. This module does not use any 3rd party bundler, transpiler, compiler or test runner. Vanilla all the way 😎.
 
 ## Why not using `intl` or other packages?
 
-Intl does not offer full flexibility around price formatting and has an overhead of loading all locale files. Additionally it requires polyfill for old browsers and headless testing. This library is bare to the bone and does not contain all possible locales definition and gives you all possible formatting options to support all price known price formats.
+Intl does not offer full flexibility around price formatting and has an overhead of loading all locale files. Additionally it requires polyfill for old browsers and headless testing. This library is bare to the bone and does not contain all possible locales definition and gives you all possible formatting options to support all known price formats.
