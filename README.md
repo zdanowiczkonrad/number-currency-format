@@ -19,7 +19,7 @@ yarn add number-currency-format
 
 ## Usage
 
-```
+```js
 const { format } = require('number-currency-format');
 
 format(1999.99);
@@ -27,7 +27,7 @@ format(1999.99);
 ```
 
 ### Setting `currency`
-```
+```js
 format(1999.99, {
     currency: '€'
 });
@@ -35,7 +35,7 @@ format(1999.99, {
 ```
 
 ### Setting other formatting options
-```
+```js
 format(1999.99, {
     currency: '$',
     spacing: false,
@@ -49,7 +49,7 @@ To see all supported usecases and example usages, run `npm test` or `yarn test`.
 ## API
 
 ### `format`
-```
+```ts
 format(number, options?: FormattingOptions)
 ```
 
