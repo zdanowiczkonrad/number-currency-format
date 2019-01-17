@@ -1,6 +1,6 @@
-# Number formatter that you control 👩‍🚀
+# Number currency format
 
-Zero-dependency, cross-browser, lightweight and flexible utility for number/price formatting.
+Zero-dependency, cross-browser, lightweight and flexible utility for number/price formatting **that you control**.
 
 ## Installation
 
