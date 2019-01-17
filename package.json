@@ -1,6 +1,6 @@
 {
   "name": "number-currency-format",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Dependency-less price formatting",
   "main": "index.js",
   "scripts": {
