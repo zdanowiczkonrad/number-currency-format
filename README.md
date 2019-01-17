@@ -1,10 +1,11 @@
-# Dependency-less price formatting
+# Number formatter that you control 👩‍🚀
 
+Zero-dependency, cross-browser, lightweight and flexible utility for number/price formatting.
 
 ## Installation
 
 ```
-npm install number-currency-format --save
+npm i number-currency-format
 ```
 
 or
@@ -19,7 +20,7 @@ yarn add number-currency-format
 const { format } = require('number-currency-format');
 
 format(1999.99);
-// 1 999.99
+// 1,999.99
 ```
 
 ### Setting `currency`
@@ -27,7 +28,7 @@ format(1999.99);
 format(1999.99, {
     currency: '€'
 });
-// 1 999.99 €
+// 1,999.99 €
 ```
 
 ### Setting other formatting options
@@ -49,19 +50,21 @@ To see all supported usecases and example usages, run `npm test` or `yarn test`.
 format(number, options?: FormattingOptions)
 ```
 
-* *number*: `number` - number to be formatted
-* *options?*: `FormattingOptions`** - Formatting options (optional).
+* *number*: `number` - Number to be formatted
+* *options?*: `FormattingOptions` - Formatting options (optional)
 
 **`FormattingOptions`**
 
- * *currency?*: `string` - Currency symbol to be printed next to the formatted number. By default: none
- * *thousandSeparator?*: `string` - Symbol separating thousands. By default: `,`
- * *decimalSeparator?*: `string` - Symbol separating decimals. By default: `.`
- * *showDecimals?*: `string` - `ALWAYS`, `IF_NEEDED` or `NEVER`. `IF_NEEDED` does not show the decimal if it is 0. By default: `ALWAYS`
- * *decimalsDigits?*: `number` - Number of decimal digits. By default: `2`
- * *currencyPosition?*: `string` - `LEFT` or `RIGHT`. By default: `RIGHT`
- * *spacing?*: `boolean` - Spacing between currency and price. By default: `true`
+ * **currency**: `string` - Currency symbol to be printed next to the formatted number. By default: none
+ * **thousandSeparator**: `string` - Symbol separating thousands. By default: `,`
+ * **decimalSeparator**: `string` - Symbol separating decimals. By default: `.`
+ * **showDecimals**: `string` - `ALWAYS`, `IF_NEEDED` or `NEVER`. `IF_NEEDED` does not show the decimal if it is 0. By default: `ALWAYS`
+ * **decimalsDigits**: `number` - Number of decimal digits. By default: `2`
+ * **currencyPosition**: `string` - `LEFT` or `RIGHT`. By default: `RIGHT`
+ * **spacing**: `boolean` - Spacing between currency and price. By default: `true`
  
+All options are optional.
+
 ## Compatibility
 This works in every modern browser as well as on the server. This module does not contain and will never contain any dependency at all. This module does not use any 3rd party bundler, transpiler, compiler or test runner. Vanilla all the way 😎.
 
