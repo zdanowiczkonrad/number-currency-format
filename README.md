@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/number-currency-format.svg)](https://badge.fury.io/js/number-currency-format)
+[![Build Status](https://travis-ci.org/zdanowiczkonrad/number-currency-format.svg?branch=master)](https://travis-ci.org/zdanowiczkonrad/number-currency-format)
+
 # Number currency format
 
 Zero-dependency, cross-browser, lightweight and flexible utility for number/price formatting **that you control**.
