@@ -24,6 +24,30 @@ assert(format(123.4), '123.40', 'Decimals should follow the decimal precision fo
 assert(format(123.45, { decimalsDigits: 5 }), '123.45000', 'Custom decimal digits should work for larger decimal and padding');
 assert(format(123, { decimalsDigits: 5, showDecimals: 'ALWAYS' }), '123.00000', 'Custom decimal digits should be respected when no decimals but showing decimals is forced');
 
+suite('Decimal rounding with tie breaking');
+assert(format(0.005), '0.01', '0.005 -> 0.01 [up]');
+assert(format(0.015), '0.01', '0.015 -> 0.01 [down]');
+assert(format(0.025), '0.03', '0.025 -> 0.03 [up]');
+assert(format(0.035), '0.04', '0.035 -> 0.04 [up]');
+assert(format(0.045), '0.04', '0.045 -> 0.04 [down]');
+assert(format(0.055), '0.06', '0.055 -> 0.06 [up]');
+assert(format(0.065), '0.07', '0.065 -> 0.07 [up]');
+assert(format(0.075), '0.07', '0.075 -> 0.07 [down]');
+assert(format(0.085), '0.09', '0.085 -> 0.09 [up]');
+assert(format(0.095), '0.10', '0.095 -> 0.10 [up]');
+
+suite('Decimal rounding half-ups with arithmetical rounding enforced');
+assert(format(0.005, { arithmeticalRounding: true }), '0.01', '0.005 -> 0.01 [up]');
+assert(format(0.015, { arithmeticalRounding: true }), '0.02', '0.015 -> 0.02 [up]');
+assert(format(0.025, { arithmeticalRounding: true }), '0.03', '0.025 -> 0.03 [up]');
+assert(format(0.035, { arithmeticalRounding: true }), '0.04', '0.035 -> 0.04 [up]');
+assert(format(0.045, { arithmeticalRounding: true }), '0.05', '0.045 -> 0.05 [up]');
+assert(format(0.055, { arithmeticalRounding: true }), '0.06', '0.055 -> 0.06 [up]');
+assert(format(0.065, { arithmeticalRounding: true }), '0.07', '0.065 -> 0.07 [up]');
+assert(format(0.075, { arithmeticalRounding: true }), '0.08', '0.075 -> 0.08 [up]');
+assert(format(0.085, { arithmeticalRounding: true }), '0.09', '0.085 -> 0.09 [up]');
+assert(format(0.095, { arithmeticalRounding: true }), '0.10', '0.095 -> 0.10 [up]');
+
 suite('Decimal separator');
 assert(format(123.45, { decimalSeparator: '.' }), '123.45', 'Decimal separator is by default a dot');
 assert(format(123.45, { decimalSeparator: ',' }), '123,45', 'Decimal separator can be customized');

@@ -65,8 +65,9 @@ format(number, options?: FormattingOptions)
  * **decimalsDigits**: `number` - Number of decimal digits. By default: `2`
  * **currencyPosition**: `string` - `LEFT` or `RIGHT`. By default: `RIGHT`
  * **spacing**: `boolean` - Spacing between currency and price. By default: `true`
- 
-All options are optional.
+ * **arithmeticalRounding**: `boolean` - Enforce arithmetical rounding (always half-up). By default: `false`
+  
+All configuration is optional.
 
 ## Compatibility
 This works in every modern browser as well as on the server. This module does not contain and will never contain any dependency at all. This module does not use any 3rd party bundler, transpiler, compiler or test runner. Vanilla all the way 😎.

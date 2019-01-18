@@ -18,7 +18,8 @@ const DEFAULT_OPTIONS = {
     decimalSeparator: '.',
     currencyPosition: CURRENCY_POSITION.RIGHT,
     decimalsDigits: 2,
-    spacing: true
+    spacing: true,
+    arithmeticalRounding: false
 };
 /**
  * Returns value or default value if the value is not defined
@@ -40,6 +41,7 @@ function parseOptions(options) {
         decimalsDigits: parse(options.decimalsDigits, DEFAULT_OPTIONS.decimalsDigits),
         currencyPosition: options.currencyPosition || DEFAULT_OPTIONS.currencyPosition,
         spacing: parse(options.spacing, DEFAULT_OPTIONS.spacing),
+        arithmeticalRounding: parse(options.arithmeticalRounding, DEFAULT_OPTIONS.arithmeticalRounding)
     };
 };
 /**
@@ -55,6 +57,9 @@ function withThousandSeparator(numberText, separator) {
     }, '');
 };
 
+function roundToPlace(number, place) {
+    return +(Math.round(number + "e+" + place)  + "e-" + place);
+}
 /**
  * 
  * @param {number} number - number to be formatted
@@ -66,11 +71,14 @@ function withThousandSeparator(numberText, separator) {
  * @param {string} [options.decimalsDigits=2] - Number of decimal digits. By default: 2
  * @param {string} [options.currencyPosition='RIGHT'] - LEFT or RIGHT. By default: 'RIGHT'
  * @param {boolean} [options.spacing=true] - spacing between currency and price
+ * @param {boolean} [options.arithmeticalRounding=false] - Enables regular rounding without tie-breaking. By default: false
  */
 function format(number, options) {
     const opts = parseOptions(options);
     
-    const fullPriceInNormalFormat = parseFloat((+number).toString())
+    const fullPriceInNormalFormat = parseFloat(
+            (opts.arithmeticalRounding ? roundToPlace(number, opts.decimalsDigits) : +number)
+        .toString())
         .toFixed(opts.showDecimals === SHOW_DECIMALS.NEVER ? 0 : opts.decimalsDigits);
 
     if (isNaN(fullPriceInNormalFormat)) return number;
