@@ -66,6 +66,7 @@ assert(format(123, { currency: '$', spacing: false }), '123.00$', 'Spacing betwe
 assert(format(123, { currency: '$', spacing: false, currencyPosition: 'LEFT' }), '$123.00', 'Currency settings should be respected altogether');
 
 suite('API edge cases');
+assert(format(10, {decimalsDigits: 8, currency: '฿'}), '10.00000000 ฿', 'Handle floating arythmetics right (without dangling 1)');
 assert(format(0), '0.00','Zero format');
 assert(format('0'), '0.00', 'Zero format from string');
 assert(format(0, {}), '0.00', 'Zero format with empty config');
