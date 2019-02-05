@@ -62,7 +62,7 @@ format(number, options?: FormattingOptions)
  * **thousandSeparator**: `string` - Symbol separating thousands. By default: `,`
  * **decimalSeparator**: `string` - Symbol separating decimals. By default: `.`
  * **decimalsDigits**: `number` - Number of decimal digits. By default: `2`
- * **showDecimals**: `string` - `ALWAYS`, `IF_NEEDED` or `NEVER`. `IF_NEEDED` does not show the decimal if it is 0 (and if it is different than 0, shows exactly {`decimalsDigits`} decimal digits). By default: `ALWAYS`
+ * **showDecimals**: `string` - `ALWAYS`, `IF_NEEDED` or `NEVER`. `IF_NEEDED` does not show the decimal if it is 0 (and if it is different than 0, shows exactly `{decimalsDigits}` decimal digits). By default: `ALWAYS`
  * **currencyPosition**: `string` - `LEFT` or `RIGHT`. By default: `RIGHT`
  * **spacing**: `boolean` - Spacing between currency and price. By default: `true`
  * **arithmeticalRounding**: `boolean` - Use arithmetical rounding (always half-up) instead of tie break rounding. By default: `false` (so: the rounding will include tie-breaking)
