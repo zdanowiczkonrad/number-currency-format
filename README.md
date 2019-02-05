@@ -61,11 +61,11 @@ format(number, options?: FormattingOptions)
  * **currency**: `string` - Currency symbol to be printed next to the formatted number. By default: none
  * **thousandSeparator**: `string` - Symbol separating thousands. By default: `,`
  * **decimalSeparator**: `string` - Symbol separating decimals. By default: `.`
- * **showDecimals**: `string` - `ALWAYS`, `IF_NEEDED` or `NEVER`. `IF_NEEDED` does not show the decimal if it is 0. By default: `ALWAYS`
  * **decimalsDigits**: `number` - Number of decimal digits. By default: `2`
+ * **showDecimals**: `string` - `ALWAYS`, `IF_NEEDED` or `NEVER`. `IF_NEEDED` does not show the decimal if it is 0 (and if it is different than 0, shows exactly {`decimalsDigits`} decimal digits). By default: `ALWAYS`
  * **currencyPosition**: `string` - `LEFT` or `RIGHT`. By default: `RIGHT`
  * **spacing**: `boolean` - Spacing between currency and price. By default: `true`
- * **arithmeticalRounding**: `boolean` - Enforce arithmetical rounding (always half-up). By default: `false`
+ * **arithmeticalRounding**: `boolean` - Use arithmetical rounding (always half-up) instead of tie break rounding. By default: `false` (so: the rounding will include tie-breaking)
   
 All configuration is optional.
 
