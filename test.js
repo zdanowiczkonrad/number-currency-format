@@ -23,6 +23,8 @@ assert(format(123.456, { decimalsDigits: 3 }), '123.456', 'Decimals should follo
 assert(format(123.4), '123.40', 'Decimals should follow the decimal precision for input that has less decimal digits');
 assert(format(123.45, { decimalsDigits: 5 }), '123.45000', 'Custom decimal digits should work for larger decimal and padding');
 assert(format(123, { decimalsDigits: 5, showDecimals: 'ALWAYS' }), '123.00000', 'Custom decimal digits should be respected when no decimals but showing decimals is forced');
+assert(format(123333.4567, { showDecimals: 'AS_IS' }), '123,333.4567', 'AS_IS does the formating but does not round the decimal places');
+assert(format(123.123, { decimalsDigits: 5, showDecimals: 'AS_IS' }), '123.123', 'AS_IS also ignores any decimalsDigits setting');
 
 suite('Decimal rounding with tie breaking');
 assert(format(0.005), '0.01', '0.005 -> 0.01 [up]');
@@ -108,4 +110,4 @@ const failedTests = testIndex - successes;
 console.log(`\nFailed: ${failedTests}, total: ${testIndex}`);
 if (failedTests > 0) {
     process.exit(1);
-} 
+}
