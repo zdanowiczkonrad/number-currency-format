@@ -77,20 +77,22 @@ function roundToPlace(number, place) {
 function format(number, options) {
     const opts = parseOptions(options);
 
-    const roundedPrice = parseFloat(
-            (opts.arithmeticalRounding ? roundToPlace(number, opts.decimalsDigits) : +number)
-        .toString());
-    const fullPriceInNormalFormat = opts.showDecimals !== SHOW_DECIMALS.AS_IS ?
-      roundedPrice.toFixed(opts.showDecimals === SHOW_DECIMALS.NEVER ? 0 : opts.decimalsDigits) :
-      roundedPrice.toString();
+    const fullPriceInNormalFormat = (opts.showDecimals === SHOW_DECIMALS.AS_IS) ? number.toString() :
+      parseFloat((opts.arithmeticalRounding ? roundToPlace(number, opts.decimalsDigits) : +number)
+        .toString())
+        .toFixed(opts.showDecimals === SHOW_DECIMALS.NEVER ? 0 : opts.decimalsDigits);
 
     if (isNaN(fullPriceInNormalFormat)) return number;
 
     const priceAndDecimals = fullPriceInNormalFormat.split('.');
     const integerPricePart = priceAndDecimals[0];
-    const decimalPricePart = priceAndDecimals[1];
+    const decimalPricePart = priceAndDecimals[1] || '';
 
-    const decimals = ( (opts.showDecimals === SHOW_DECIMALS.ALWAYS) || ( (opts.showDecimals === SHOW_DECIMALS.IF_NEEDED || opts.showDecimals === SHOW_DECIMALS.AS_IS) && +decimalPricePart > 0) ) ? opts.decimalSeparator + decimalPricePart : '';
+    const decimals = (
+      (opts.showDecimals === SHOW_DECIMALS.ALWAYS) ||
+      ( (opts.showDecimals === SHOW_DECIMALS.IF_NEEDED && +decimalPricePart > 0 ) ||
+        (opts.showDecimals === SHOW_DECIMALS.AS_IS && decimalPricePart.length > 0)
+    ) ) ? opts.decimalSeparator + decimalPricePart : '';
 
     const price = withThousandSeparator(integerPricePart, opts.thousandSeparator) + decimals;
 
