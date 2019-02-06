@@ -8,7 +8,8 @@ const CURRENCY_POSITION = {
 const SHOW_DECIMALS = {
     ALWAYS: 'ALWAYS',
     NEVER: 'NEVER',
-    IF_NEEDED: 'IF_NEEDED'
+    IF_NEEDED: 'IF_NEEDED',
+    AS_IS: 'AS_IS'
 };
 
 const DEFAULT_OPTIONS = {
@@ -24,8 +25,8 @@ const DEFAULT_OPTIONS = {
 /**
  * Returns value or default value if the value is not defined
  * if value === false or value === '', the value will be returned.
- * @param {*} value 
- * @param {*} defaultValue 
+ * @param {*} value
+ * @param {*} defaultValue
  */
 function parse(value, defaultValue) {
     return value !== undefined ? value : defaultValue;
@@ -61,13 +62,13 @@ function roundToPlace(number, place) {
     return +(Math.round(number + "e+" + place)  + "e-" + place);
 }
 /**
- * 
+ *
  * @param {number} number - number to be formatted
  * @param {Object} [options] - Formatting options (optional)
  * @param {string} [options.currency=''] - Currency symbol to be printed next to the formatted number. By default: none
  * @param {string} [options.thousandSeparator=','] - Symbol separating thousands. By default: ','
  * @param {string} [options.decimalSeparator='.'] - Symbol separating decimals. By default: '.'
- * @param {string} [options.showDecimals='ALWAYS'] - ALWAYS, IF_NEEDED or NEVER. IF_NEEDED does not show the decimal if it is 0. By default: 'ALWAYS'
+ * @param {string} [options.showDecimals='ALWAYS'] - ALWAYS, IF_NEEDED, AS_IS or NEVER. IF_NEEDED does not show the decimal if it is 0. AS_IS preserves the decimal depth of the source number. By default: 'ALWAYS'
  * @param {string} [options.decimalsDigits=2] - Number of decimal digits. By default: 2
  * @param {string} [options.currencyPosition='RIGHT'] - LEFT or RIGHT. By default: 'RIGHT'
  * @param {boolean} [options.spacing=true] - spacing between currency and price
@@ -75,20 +76,24 @@ function roundToPlace(number, place) {
  */
 function format(number, options) {
     const opts = parseOptions(options);
-    
-    const fullPriceInNormalFormat = parseFloat(
-            (opts.arithmeticalRounding ? roundToPlace(number, opts.decimalsDigits) : +number)
+
+    const fullPriceInNormalFormat = (opts.showDecimals === SHOW_DECIMALS.AS_IS) ? number.toString() :
+      parseFloat((opts.arithmeticalRounding ? roundToPlace(number, opts.decimalsDigits) : +number)
         .toString())
         .toFixed(opts.showDecimals === SHOW_DECIMALS.NEVER ? 0 : opts.decimalsDigits);
 
     if (isNaN(fullPriceInNormalFormat)) return number;
-    
+
     const priceAndDecimals = fullPriceInNormalFormat.split('.');
     const integerPricePart = priceAndDecimals[0];
-    const decimalPricePart = priceAndDecimals[1];
-    
-    const decimals = (opts.showDecimals === SHOW_DECIMALS.ALWAYS || (opts.showDecimals === SHOW_DECIMALS.IF_NEEDED && +decimalPricePart > 0)) ? opts.decimalSeparator + decimalPricePart : '';   
-    
+    const decimalPricePart = priceAndDecimals[1] || '';
+
+    const decimals = (
+      (opts.showDecimals === SHOW_DECIMALS.ALWAYS) ||
+      ( (opts.showDecimals === SHOW_DECIMALS.IF_NEEDED && +decimalPricePart > 0 ) ||
+        (opts.showDecimals === SHOW_DECIMALS.AS_IS && decimalPricePart.length > 0)
+    ) ) ? opts.decimalSeparator + decimalPricePart : '';
+
     const price = withThousandSeparator(integerPricePart, opts.thousandSeparator) + decimals;
 
     if (opts.currency) {
