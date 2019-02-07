@@ -111,11 +111,11 @@ function isProbablyDecimalSeparator(text) {
     return /[\.,]/.test(text);
 };
 
-function unformat(price, options) {
+function unformat(text, options) {
     const opts = parseOptions(options);
     const customDecimalSeparator = options && options.decimalSeparator;
 
-    const withoutWhiteSpace = price.replace(/\s/g,'');
+    const withoutWhiteSpace = text.replace(/\s/g,'');
 
     // split it into (letters, notLetter, letters...) groups
     const lettersNotLettersGroups = withoutWhiteSpace.match(/[0-9]+|[^0-9]+/gi);

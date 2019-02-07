@@ -19,11 +19,13 @@ yarn add number-currency-format
 
 ## Usage
 
+### `Format`
+
 ```js
 const { format } = require('number-currency-format');
 
 format(1999.99);
-// 1,999.99
+// '1,999.99'
 ```
 
 ### Setting `currency`
@@ -31,7 +33,7 @@ format(1999.99);
 format(1999.99, {
     currency: '€'
 });
-// 1,999.99 €
+// '1,999.99 €'
 ```
 
 ### Setting other formatting options
@@ -44,17 +46,37 @@ format(1999.99, {
 //'$1,999.99'
 ```
 
+### `Unformat`
+
+```js
+const { unformat } = require('number-currency-format');
+
+unformat('1.999,99');
+// 1999.99
+```
+
+### Currencies
+
+```js
+const { unformat } = require('number-currency-format');
+
+unformat('$ 199.990,05');
+// 199990.05
+```
+
 To see all supported usecases and example usages, run `npm test` or `yarn test`.
 
 ## API
 
 ### `format`
 ```ts
-format(number, options?: FormattingOptions)
+format(number: number, options?: FormattingOptions)
 ```
+Formats number given defined formatting options
 
 * *number*: `number` - Number to be formatted
 * *options?*: `FormattingOptions` - Formatting options (optional)
+
 
 **`FormattingOptions`**
 
@@ -69,6 +91,15 @@ format(number, options?: FormattingOptions)
 
 All configuration is optional.
 
+### `unformat`
+```ts
+unformat(text: string, options?: FormattingOptions)
+```
+Reads the number out of a string that looks like a price.
+
+* *text*: `text` - Text to be unformatted
+* *options?*: `FormattingOptions` - Formatting options (optional). Currently only `decimalSeparator` is supported by the unformatter as the rest of the options don't really make sense and the unformatter can extract the price out of the text anyway.
+  
 ## Compatibility
 This works in every modern browser as well as on the server. This module does not contain and will never contain any dependency at all. This module does not use any 3rd party bundler, transpiler, compiler or test runner. Vanilla all the way 😎.
 
