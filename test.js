@@ -1,8 +1,9 @@
-const { format } = require('./index');
+const { format, unformat } = require('./index');
 
 let testIndex = 0;
 let successes = 0;
 let verbose = true;
+suite('FORMAT');
 
 suite('Integer number formatting');
 assert(format(parseInt(123)), '123.00', 'Integer number');
@@ -78,11 +79,44 @@ assert(format(0, {}), '0.00', 'Zero format with empty config');
 assert(format('124.22'), '124.22', 'From string as number');
 assert(format('five'), 'five', 'Invalid string should be passed through');
 assert(format(), undefined, 'If nothing is provided, return undefined');
+assert(format(-234.56, { thousandSeparator: ','}), '-234.56', 'Thousand separator works fine with negative number');
 
 suite('Diacritics and actual language examples');
 assert(format(1999.99, { currency: 'zł', thousandSeparator: '', decimalSeparator: ','}), '1999,99 zł', 'Poland');
 assert(format(1999.99, { currency: '$', spacing: false, currencyPosition: 'LEFT'}), '$1,999.99', 'US');
 assert(format(1999.99, { currency: 'Rp', thousandSeparator: '.', spacing: false, currencyPosition: 'LEFT', showDecimals: 'NEVER'}), 'Rp2.000', 'Indonesian');
+
+suite('UNFORMAT');
+
+assert(unformat('123'), 123., 'Unformat integer number');
+assert(unformat('123.'), 123., 'Unformat integer number with a trailing separator');
+assert(unformat('.55'), .55, 'Unformat only decimal part');
+assert(unformat(',55'), .55, 'Unformat only decimal part with different separator');
+assert(unformat('.456'), .456, 'Unformat only decimal part that is a bit longer');
+assert(unformat('.1'), .1, 'Unformat size one decimal part');
+assert(unformat('0,0'), .0, 'Zero trailing decimals');
+assert(unformat('0.123'), .123, 'Zero trailing decials 2');
+assert(unformat('.1'), .1, 'Unformat size one decimal part');
+assert(unformat('123,456,789'), 123456789., 'Unformat integer number with thousands separators');
+assert(unformat('123.456'), 123456, 'Unformat integer number with thousand separator');
+assert(unformat('123.12'), 123.12, 'Unformat integer number with decimal separator');
+assert(unformat('123,12'), 123.12, 'Unformat integer number with decimal separator (different separator character)');
+assert(unformat('123,456.78'), 123456.78, 'Unformat integer number with decimal separator and thousand separator when decimals length is known');
+assert(unformat('123,456.789'), 123456.789, 'Unformat integer number with decimal separator and thousand separator when decimals length is unknown but it can be deducted from the types of separators');
+assert(unformat('-123,456.789'), -123456.789, 'Unformat negative number');
+assert(unformat('123,456:789', { decimalSeparator: ':'}), 123456.789, 'Unformat with regard of custom decimal separator');
+assert(unformat('123,456:789', { decimalSeparator: '.'}), 123456789, 'Unformat with regard of custom decimal separator and ignoring decimal guesser');
+
+suite('Currencies and real-life examples');
+assert(unformat('kr. 55'), .55, 'Does not treat non-single character separators as decimal separator');
+assert(unformat('kr 250,162'), 250162, 'Does not treat non-single character separators as decimal separator');
+assert(unformat('14$'), 14, 'Handles simple currency case');
+assert(unformat('$14'), 14, 'Handles simple currency case (currency before the number)');
+assert(unformat('$123.45'), 123.45, 'Handles a bit trickier currency case');
+assert(unformat('$-123,456.7'), -123456.7, 'Handles a bit trickier price+currency case');
+assert(unformat('$-123 456.78'), -123456.78, 'Handles a bit trickier price+currency case');
+assert(unformat('123.456.789$'), 123456789, 'Handles a bit trickier price+currency case');
+assert(unformat('123.456.789$', { decimalSeparator: '.'}), 123456.789, 'Handles a bit trickier price+currency case');
 
 function suite(suiteName) {
     console.log(`\n${suiteName}\n${(() => {let line = ''; for(let i = 0;i<suiteName.length;i++){line+='-'} return line;})()}`);

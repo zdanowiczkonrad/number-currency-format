@@ -53,7 +53,7 @@ function parseOptions(options) {
  */
 function withThousandSeparator(numberText, separator) {
     return numberText.split('').reduce(function(returnText, currentLetter, index) {
-        const maybeSeparator = (index < numberText.length - 1 && (numberText.length - index - 1) % 3 === 0) ? separator : '';
+        const maybeSeparator = (index < numberText.length - 1 && (numberText.length - index - 1) % 3 === 0 && currentLetter!== '-') ? separator : ''
         return returnText + currentLetter + maybeSeparator;
     }, '');
 };
@@ -106,6 +106,80 @@ function format(number, options) {
     }
 };
 
+function isProbablyDecimalSeparator(text) {
+    // I assume the only feasible decimal separators could be . and ,
+    return /[\.,]/.test(text);
+};
+
+function unformat(price, options) {
+    const opts = parseOptions(options);
+    const customDecimalSeparator = options && options.decimalSeparator;
+
+    const withoutWhiteSpace = price.replace(/\s/g,'');
+
+    // split it into (letters, notLetter, letters...) groups
+    const lettersNotLettersGroups = withoutWhiteSpace.match(/[0-9]+|[^0-9]+/gi);
+    const groups = lettersNotLettersGroups.map(function(group, i) {
+        return {
+            value: group,
+            isNumber: (/[0-9]+/).test(group),
+            index: i
+        }
+    });
+
+    const numbers = groups.filter(function(group) { return group.isNumber; });
+    const separators = groups.filter(function(group) { return !group.isNumber; });
+
+    const firstNumberGroup = numbers[0];
+    const lastNumberGroup = numbers[numbers.length - 1];
+
+    const firstNonZeroNumberGroup = firstNumberGroup.value > 0 ? firstNumberGroup : numbers.length > 1 ? numbers[1].value > 0 ? numbers[1] : undefined: undefined;
+    
+    if (!firstNonZeroNumberGroup) {
+        return 0;
+    }
+
+    // Decimals presence test 1: .123 -> first separator lays before the first number group
+    const separatorBeforeFirstNumber = firstNonZeroNumberGroup.index > 0 ? groups[firstNonZeroNumberGroup.index - 1] : undefined;
+    const firstSeparatorIsDecimal = separatorBeforeFirstNumber && separators.length === 1 && isProbablyDecimalSeparator(separatorBeforeFirstNumber.value);
+
+    // Decimals presence test 2: 123.456,789 -> last separator is different to the rest of separators
+    const separatorBeforeLastNumberIndex = lastNumberGroup.index - 1;
+    const separatorBeforeLastNumber = separatorBeforeLastNumberIndex >= 0 && groups[separatorBeforeLastNumberIndex];
+    const separatorsPastFirstNumberButLastNumberSeparator = separators.filter(function(group) {
+        return group.index > firstNumberGroup.index && group.index < separatorBeforeLastNumberIndex;
+    }).map(function(separator) {
+        return separator.value
+    });
+
+    const lastSeparatorBetweenTheNumberIsDifferentThanOthers = separatorsPastFirstNumberButLastNumberSeparator.length > 0 && 
+    separatorsPastFirstNumberButLastNumberSeparator.indexOf(separatorBeforeLastNumber.value) < 0;
+
+    // Decimals presence test 3: user specified explicitly a decimal separator and it is a last separator between the numbers
+    const lastSeparatorIsAsSpecifiedByUser = separatorBeforeLastNumber && separatorBeforeLastNumber.value === customDecimalSeparator;
+
+    // Decimals presence test 4: last group matches the decimals length (default: 2)
+    // And there's a character before the last group that looks like a decimal separator
+    const lastGroupMatchesDecimalsLength = lastNumberGroup.value.length === opts.decimalsDigits && separatorBeforeLastNumber && isProbablyDecimalSeparator(separatorBeforeLastNumber.value);
+
+    // Combine all decimal presence tests
+    const lastGroupIsProbablyDecimal = customDecimalSeparator ? lastSeparatorIsAsSpecifiedByUser :
+        (lastGroupMatchesDecimalsLength ||
+        lastSeparatorIsAsSpecifiedByUser ||
+        firstSeparatorIsDecimal ||
+        lastSeparatorBetweenTheNumberIsDifferentThanOthers);
+
+    const probablyDecimalsDigits = lastGroupIsProbablyDecimal ? lastNumberGroup.value.length : 0;
+
+    const lastSeparatorText = separatorBeforeFirstNumber && separatorBeforeFirstNumber.value;
+    const isNegative = lastSeparatorText && lastSeparatorText[lastSeparatorText.length - 1] === '-';
+
+    const joinedNumber = numbers.map(function(number) {return number.value }).join('');
+
+    return parseFloat(joinedNumber / Math.pow(10, probablyDecimalsDigits)) * (isNegative ? -1 : 1);
+};
+
 module.exports = {
-    format
+    format,
+    unformat
 };
