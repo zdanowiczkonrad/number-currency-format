@@ -108,7 +108,7 @@ function format(number, options) {
 
 function isProbablyDecimalSeparator(text) {
     // I assume the only feasible decimal separators could be . and ,
-    return /[\.,]/.test(text);
+    return /^[\.,]$/.test(text);
 };
 
 function unformat(text, options) {

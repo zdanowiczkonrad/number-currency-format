@@ -108,7 +108,7 @@ assert(unformat('123,456:789', { decimalSeparator: ':'}), 123456.789, 'Unformat 
 assert(unformat('123,456:789', { decimalSeparator: '.'}), 123456789, 'Unformat with regard of custom decimal separator and ignoring decimal guesser');
 
 suite('Currencies and real-life examples');
-assert(unformat('kr. 55'), .55, 'Does not treat non-single character separators as decimal separator');
+assert(unformat('kr. 55'), 55, 'Does not treat non-single character separators as decimal separator');
 assert(unformat('kr 250,162'), 250162, 'Does not treat non-single character separators as decimal separator');
 assert(unformat('14$'), 14, 'Handles simple currency case');
 assert(unformat('$14'), 14, 'Handles simple currency case (currency before the number)');
